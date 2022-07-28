@@ -43,6 +43,7 @@ export interface Offer {
 export interface BankInfo {
   achRoutingNumber: string;
   bankAccountNumber: string;
+  bankAccountName?: string;
   bankName: string;
   accountType: string;
 }
