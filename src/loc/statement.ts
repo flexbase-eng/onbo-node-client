@@ -13,10 +13,10 @@ export class StatementApi {
   }
 
   /*
-   * Function to take a userId and locId and return a list of all the
-   * Repayments made against that LOC in Onbo.
+   * Function to take a userId and locId and return a complete Statement
+   * for that LOC in Onbo.
    */
-  async list(userId: string, locId: string): Promise<{
+  async get(userId: string, locId: string): Promise<{
     success: boolean,
     statement?: Statement,
     error?: OnboError,
