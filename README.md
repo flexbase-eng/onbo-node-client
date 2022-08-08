@@ -729,7 +729,7 @@ All Line of Credit Statement calls are grouped under `loc.statement`.
 You can get the statement for the LOC with a single call:
 
 ```typescript
-const resp = await client.loc.statement.list(userId, locId)
+const resp = await client.loc.statement.get(userId, locId)
 ```
 
 and the response will be something like:
