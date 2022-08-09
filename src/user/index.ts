@@ -220,6 +220,13 @@ export class UserApi {
           arg.ssn = aesEncrypt(dig.join(''), this.client.secret)
         }
       }
+      if (!isEmpty(arg.ein)) {
+        // keep just the digits and AES encrypt them
+        const dig = arg.ein.match(/[0-9]/g) || []
+        if (dig.length == 9) {
+          arg.ssn = aesEncrypt(dig.join(''), this.client.secret)
+        }
+      }
       if (!isEmpty(arg.phone)) {
         // they want nothing but digits for the phone
         const dig = arg.phone!.match(/[0-9]/g) || []
