@@ -5,7 +5,6 @@ import { KeyPersonApi } from './key-person'
 export interface Consumer extends Person {
   uuid: string;
   userType: string;
-  citizenship?: string;
   website?: string;
   dwollaCustomerUrl?: string;
   assetReportJsonGzip?: string;
@@ -18,7 +17,7 @@ export interface Business {
   firstName: string;
   email: string;
   phone?: string;
-  ein: string;
+  EIN: string;
   startDate?: string;
   entity?: string;
   website?: string;
@@ -38,6 +37,7 @@ export interface Person {
   phone?: string;
   ssn: string;
   address?: Address;
+  citizenship?: string;
 }
 
 export interface Address {
@@ -220,13 +220,6 @@ export class UserApi {
           arg.ssn = aesEncrypt(dig.join(''), this.client.secret)
         }
       }
-      if (!isEmpty(arg.ein)) {
-        // keep just the digits and AES encrypt them
-        const dig = arg.ein.match(/[0-9]/g) || []
-        if (dig.length == 9) {
-          arg.ssn = aesEncrypt(dig.join(''), this.client.secret)
-        }
-      }
       if (!isEmpty(arg.phone)) {
         // they want nothing but digits for the phone
         const dig = arg.phone!.match(/[0-9]/g) || []
@@ -236,11 +229,11 @@ export class UserApi {
       }
 
       // ...these are for the Business Users...
-      if (!isEmpty(arg.ein)) {
+      if (!isEmpty(arg.EIN)) {
         // keep just the digits and AES encrypt them
-        const dig = arg.ein.match(/[0-9]/g) || []
+        const dig = arg.EIN.match(/[0-9]/g) || []
         if (dig.length == 9) {
-          arg.ein = aesEncrypt(dig.join(''), this.client.secret)
+          arg.EIN = aesEncrypt(dig.join(''), this.client.secret)
         }
       }
       if (!isEmpty(arg.keyPeople)) {
