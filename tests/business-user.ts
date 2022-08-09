@@ -22,7 +22,7 @@ import { Onbo } from '../src/index'
   console.log('creating a new Business User...')
   const chips = {
     userType: 'BUSINESS',
-    EIN: '11-1111111',
+    ein: '11-1111111',
     firstName: "Chip's Concrete",
     phone: '515-555-1212',
     startDate: '1996-02-06',
