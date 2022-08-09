@@ -17,7 +17,7 @@ export interface Business {
   firstName: string;
   email: string;
   phone?: string;
-  EIN: string;
+  ein: string;
   startDate?: string;
   entity?: string;
   website?: string;
@@ -229,11 +229,11 @@ export class UserApi {
       }
 
       // ...these are for the Business Users...
-      if (!isEmpty(arg.EIN)) {
+      if (!isEmpty(arg.ein)) {
         // keep just the digits and AES encrypt them
-        const dig = arg.EIN.match(/[0-9]/g) || []
+        const dig = arg.ein.match(/[0-9]/g) || []
         if (dig.length == 9) {
-          arg.EIN = aesEncrypt(dig.join(''), this.client.secret)
+          arg.ein = aesEncrypt(dig.join(''), this.client.secret)
         }
       }
       if (!isEmpty(arg.keyPeople)) {
