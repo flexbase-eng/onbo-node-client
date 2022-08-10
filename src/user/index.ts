@@ -91,7 +91,7 @@ export class UserApi {
     }
     return {
       success: true,
-      users: resp?.payload?.data.map((u: User) => this.fromOnbo(u)),
+      users: resp?.payload?.data.map((u: any) => this.fromOnbo(u)),
       pagination: resp?.payload?.pagination,
     }
   }
@@ -249,7 +249,7 @@ export class UserApi {
    * expect with countries as ISO codes and phone numbers with dashes
    * like ###-###-####.
    */
-  fromOnbo(arg: any): User {
+  fromOnbo(arg: any): any {
     // make a deep copy for mutations
     let rdy = JSON.parse(JSON.stringify(arg))
     if (typeof rdy.address?.country === 'string') {
@@ -318,7 +318,7 @@ export class UserApi {
     }
     if (!isEmpty(rdy.keyPeople)) {
       // run each person in the array through the same function...
-      rdy.keyPeople = rdy.keyPeople.map((p: any) => this.toOnbo(p))
+      rdy.keyPeople = rdy.keyPeople.map((p: any) => this.toOnboLog(p))
     }
     return rdy
   }
@@ -327,7 +327,13 @@ export class UserApi {
    * Do before and after comparisons
    */
   toCheck(arg: any): any {
-    return { before: arg, after: this.toOnbo(arg), loggy: this.toOnboLog(arg) }
+    const rdy = this.toOnbo(arg)
+    return {
+      before: arg,
+      after: rdy,
+      loggy: this.toOnboLog(arg),
+      reverse: this.fromOnbo(rdy),
+    }
   }
 
 }
