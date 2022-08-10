@@ -133,7 +133,7 @@ export class UserApi {
       'users',
       undefined,
       undefined,
-      this.toOnbo(data) as User,
+      this.toOnbo(data),
     )
     if ((resp?.response?.status >= 400) || !isEmpty(resp?.payload?.message)) {
       return {
@@ -188,7 +188,7 @@ export class UserApi {
       `users/${userId}`,
       undefined,
       undefined,
-      this.toOnbo(data) as User,
+      this.toOnbo(data),
     )
     if ((resp?.response?.status >= 400) || !isEmpty(resp?.payload?.message)) {
       return {
@@ -215,14 +215,14 @@ export class UserApi {
       }
       if (!isEmpty(arg.ssn)) {
         // keep just the digits and AES encrypt them
-        const dig = arg.ssn.match(/[0-9]/g) || []
+        const dig = arg.ssn.match(/[0-9]/g) ?? []
         if (dig.length == 9) {
           arg.ssn = aesEncrypt(dig.join(''), this.client.secret)
         }
       }
       if (!isEmpty(arg.phone)) {
         // they want nothing but digits for the phone
-        const dig = arg.phone!.match(/[0-9]/g) || []
+        const dig = arg.phone!.match(/[0-9]/g) ?? []
         if (dig.length == 10) {
           arg.phone = dig.join('')
         }
@@ -231,7 +231,7 @@ export class UserApi {
       // ...these are for the Business Users...
       if (!isEmpty(arg.ein)) {
         // keep just the digits and AES encrypt them
-        const dig = arg.ein.match(/[0-9]/g) || []
+        const dig = arg.ein.match(/[0-9]/g) ?? []
         if (dig.length == 9) {
           arg.ein = aesEncrypt(dig.join(''), this.client.secret)
         }
@@ -259,14 +259,72 @@ export class UserApi {
       }
       if (!isEmpty(arg.phone)) {
         // let's stick with XXX-XXX-XXXX
-        const dig = arg.phone.match(/[0-9]/g) || []
+        const dig = arg.phone.match(/[0-9]/g) ?? []
         if (dig.length == 10) {
           arg.phone = dig.slice(0,3).join('') + '-' +
                       dig.slice(3,6).join('') + '-' +
                       dig.slice(-4).join('')
         }
       }
+
+      // ...these are for the Business Users...
+      if (!isEmpty(arg.keyPeople)) {
+        // run each person in the array through the same function...
+        arg.keyPeople = arg.keyPeople.map((p: any) => this.fromOnbo(p))
+      }
     }
     return arg
   }
+
+  /*
+   * Testing functions to understand the problem with the Javascript
+   * execution of the mapping functions.
+   */
+  toOnboLog(arg: any): any {
+    if (typeof arg === 'object' && !isEmpty(arg)) {
+      if (typeof arg.address?.country === 'string') {
+        // only allow 'United States' - not 'US'
+        console.log('COUNTRY', arg.address.country.toUpperCase())
+        if (arg.address.country.toUpperCase() === 'US') {
+          arg.address.country = 'United States'
+        }
+      }
+      if (!isEmpty(arg.ssn)) {
+        // keep just the digits and AES encrypt them
+        const dig = arg.ssn.match(/[0-9]/g) ?? []
+        console.log('SSN', dig.join(''), dig.length)
+        if (dig.length == 9) {
+          arg.ssn = aesEncrypt(dig.join(''), this.client.secret)
+        }
+      }
+      if (!isEmpty(arg.phone)) {
+        // they want nothing but digits for the phone
+        const dig = arg.phone!.match(/[0-9]/g) ?? []
+        console.log('PHONE', dig.join(''), dig.length)
+        if (dig.length == 10) {
+          arg.phone = dig.join('')
+        }
+      }
+
+      // ...these are for the Business Users...
+      if (!isEmpty(arg.ein)) {
+        // keep just the digits and AES encrypt them
+        const dig = arg.ein.match(/[0-9]/g) ?? []
+        console.log('EIN', dig.join(''), dig.length)
+        if (dig.length == 9) {
+          arg.ein = aesEncrypt(dig.join(''), this.client.secret)
+        }
+      }
+      if (!isEmpty(arg.keyPeople)) {
+        // run each person in the array through the same function...
+        arg.keyPeople = arg.keyPeople.map((p: any) => this.toOnbo(p))
+      }
+    }
+    return arg
+  }
+
+  toCheck(arg: any): any {
+    return { before: arg, after: this.toOnbo(arg), loggy: this.toOnboLog(arg) }
+  }
+
 }
