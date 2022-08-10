@@ -1,6 +1,6 @@
 {
   "name": "@flexbase/onbo-node-client",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "description": "Node.js Client for Onbo API",
   "keywords": [
     "withpersona.com",
