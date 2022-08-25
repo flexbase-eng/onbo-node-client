@@ -142,6 +142,7 @@ export class ApplicationApi {
   async activate(userId: string, offerId: string, data: {
     status: string,
     documentUuid: string,
+    keyPersonUuid: string,
     disbursementBankInfo?: BankInfo,
     repaymentBankInfo?: BankInfo,
   }): Promise<{
