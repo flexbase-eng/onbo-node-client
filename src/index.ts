@@ -7,6 +7,7 @@ import * as CryptoJS from 'crypto-js'
 
 import { UserApi } from './user'
 import { LineOfCreditApi } from './loc'
+import { WebhookApi } from './webhook'
 
 const ClientVersion = require('../package.json').version
 const PROTOCOL = 'https'
@@ -69,6 +70,7 @@ export class Onbo {
   secret: string
   user: UserApi
   loc: LineOfCreditApi
+  webhook: WebhookApi
 
   constructor (clientId: string, secret: string, options?: OnboOptions) {
     this.host = options?.host ?? ONBO_HOST
@@ -77,6 +79,7 @@ export class Onbo {
     // now construct all the specific domain objects
     this.user = new UserApi(this, options)
     this.loc = new LineOfCreditApi(this, options)
+    this.webhook = new WebhookApi(this, options)
   }
 
   /*
@@ -251,6 +254,15 @@ export function mkQueryParams(arg: any): any {
   }
   if (!isEmpty(arg?.offset)) {
     ans['offset'] = arg.offset
+  }
+  if (!isEmpty(arg?.event)) {
+    ans['event'] = arg.event
+  }
+  if (!isEmpty(arg?.startDate)) {
+    ans['start_date'] = arg.startDate
+  }
+  if (!isEmpty(arg?.endDate)) {
+    ans['end_date'] = arg.endDate
   }
   return ans
 }
